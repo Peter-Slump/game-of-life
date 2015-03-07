@@ -1,5 +1,7 @@
 # Conway's Game of Life
 
+http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
+
 **Usage:**
 
 Create a file which specifies a pattern with . (dots) and X-es.
