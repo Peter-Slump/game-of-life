@@ -13,7 +13,7 @@ if __name__ == '__main__':
     import sys
     # logging.basicConfig(filename='myapp.log', level=logging.DEBUG)
     logger.addHandler(logging.StreamHandler(stream=sys.stdout))
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.WARNING)
 
     logger.info('Start Game Of Life GTK version.')
 
