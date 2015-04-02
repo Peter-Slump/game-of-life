@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import logging
 import threading
 import time
@@ -29,7 +27,6 @@ class GameOfLiveGtk(Gtk.Window):
         super(GameOfLiveGtk, self).__init__(*args, **kwargs)
 
         self.set_border_width(10)
-        # self.set_default_size(400, 200)
         self.connect('destroy', lambda _: quit_())
 
         self._model = GameOfLifeModel(cols=50, rows=50, grid_data=[False for _ in range(50 * 50)])

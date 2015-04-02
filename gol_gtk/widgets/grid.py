@@ -42,6 +42,9 @@ class GameOfLiveGrid(Gtk.DrawingArea):
         width = drawing_area.get_allocated_width()
         height = drawing_area.get_allocated_height()
 
+        cell_spacing = self.cell_spacing
+        cell_size = self.cell_size
+
         cols = self._data_provider.cols
         rows = self._data_provider.rows
         grid_data = self._data_provider.grid_data
@@ -53,12 +56,12 @@ class GameOfLiveGrid(Gtk.DrawingArea):
                 return False
 
         # Calculate spacing size to whole pixel size
-        spacing_size = float(self.cell_size) * self.cell_spacing
+        spacing_size = float(cell_size) * cell_spacing
         spacing_size = int(round(spacing_size))
 
         # Set correct size
-        widget_width = (self.cell_size * cols) + (spacing_size * cols + 1)
-        widget_height = (self.cell_size * rows) + (spacing_size * rows + 1)
+        widget_width = (cell_size * cols) + (spacing_size * cols + 1)
+        widget_height = (cell_size * rows) + (spacing_size * rows + 1)
 
         drawing_area.set_size_request(widget_width, widget_height)
 
@@ -78,12 +81,12 @@ class GameOfLiveGrid(Gtk.DrawingArea):
 
                 # If we're outside the clip this will do nothing.
                 cairo_context.rectangle(pos_x, pos_y,
-                                        self.cell_size,
-                                        self.cell_size)
+                                        cell_size,
+                                        cell_size)
                 cairo_context.fill()
 
-                pos_x += spacing_size + self.cell_size
+                pos_x += spacing_size + cell_size
                 current_col += 1
 
-            pos_y += spacing_size + self.cell_size
+            pos_y += spacing_size + cell_size
             current_row += 1
