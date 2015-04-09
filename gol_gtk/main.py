@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class GameOfLiveGtk(Gtk.Window):
 
     _model = None
-    _sleep = .1
+    _sleep = 1
     _run = False
     _game_thread = None
 

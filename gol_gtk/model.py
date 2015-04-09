@@ -33,3 +33,12 @@ class GameOfLifeModel(GObject.GObject):
         self.set_property('rows', rows)
         self.set_property('grid_data', grid_data)
         self.set_property('generation', 0)
+
+    def set_cell_state(self, pos_x, pos_y, state):
+        """Set state (alive/death) of given cell"""
+        index = (self.cols * pos_y) + pos_x
+
+        grid_data = list(self.grid_data)
+        grid_data[index] = state
+
+        self.set_property('grid_data', tuple(grid_data))

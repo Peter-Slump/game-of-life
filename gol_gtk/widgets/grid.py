@@ -1,6 +1,6 @@
 import logging
 
-from gi.repository import Gtk, GObject
+from gi.repository import Gdk, Gtk, GObject
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +25,17 @@ class GameOfLiveGrid(Gtk.DrawingArea):
         self._init_data_provider(data_provider)
 
         self.connect('draw', self.on_draw)
+        self.connect('configure-event', self.on_configure_event)
+        self.connect('button-press-event', self.on_button_press_event)
+        self.connect('motion-notify-event', self.on_motion_notify_event)
+
+        # Ask to receive events the drawing area doesn't normally
+        # subscribe to
+        self.set_events(self.get_events()
+                        | Gdk.EventMask.LEAVE_NOTIFY_MASK  # the pointer has left the window.
+                        | Gdk.EventMask.BUTTON_PRESS_MASK  # a mouse button has been pressed.
+                        | Gdk.EventMask.POINTER_MOTION_MASK  # the pointer (usually a mouse) has moved.
+                        | Gdk.EventMask.POINTER_MOTION_HINT_MASK)
 
     def _init_data_provider(self, data_provider):
 
@@ -34,6 +45,29 @@ class GameOfLiveGrid(Gtk.DrawingArea):
 
     def on_grid_data_update(self, model, gdata_grid_data):
         self.queue_draw()
+
+        return True
+
+    def on_configure_event(self, drawing_area, event):
+        logger.debug('configure-event')
+
+        return True
+
+    def on_button_press_event(self, drawing_area, event):
+        logger.debug('button-press-event')
+
+        if event.button == 1:
+            self.enable_cell_by_position(event.x, event.y)
+
+        return True
+
+    def on_motion_notify_event(self, drawing_area, event):
+        (window, x, y, state) = event.window.get_pointer()
+
+        if state & Gdk.ModifierType.BUTTON1_MASK:
+            self.enable_cell_by_position(x, y)
+
+        return True
 
     def on_draw(self, drawing_area, cairo_context):
         logger.debug('Handle Draw-event')
@@ -90,3 +124,20 @@ class GameOfLiveGrid(Gtk.DrawingArea):
 
             pos_y += spacing_size + cell_size
             current_row += 1
+
+        return True
+
+    def enable_cell_by_position(self, x, y):
+
+        # Calculate which cell is underneath the given coordinates
+        cell_spacing = self.cell_spacing
+        cell_size = self.cell_size
+
+        # Calculate spacing size to whole pixel size
+        spacing_size = float(cell_size) * cell_spacing
+        spacing_size = int(round(spacing_size))
+
+        pos_x = (x - (cell_spacing * 2)) / (spacing_size + cell_size)
+        pos_y = (y - (cell_spacing * 2)) / (spacing_size + cell_size)
+
+        self._data_provider.set_cell_state(pos_x=int(round(pos_x)), pos_y=int(round(pos_y)), state=True)
