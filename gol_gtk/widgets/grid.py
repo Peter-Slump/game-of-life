@@ -102,8 +102,6 @@ class GameOfLiveGrid(Gtk.DrawingArea):
         pos_y = spacing_size
         current_row = 0
 
-        cairo_context.set_source_rgb(0, 0, 0)
-
         while pos_y < height and current_row < rows:
             pos_x = spacing_size
             current_col = 0
